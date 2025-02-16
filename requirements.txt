@@ -2,5 +2,3 @@ streamlit
 streamlit
 pandas
 yfinance
-
-≈
