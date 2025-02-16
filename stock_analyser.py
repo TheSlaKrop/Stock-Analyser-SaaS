@@ -4,7 +4,7 @@
 import yfinance as yf
 import pandas as pd
 import streamlit as st
-import matplotlib.pyplot as plt
+import plotly.express as px
 
 def fetch_stock_data(symbol):
     """
@@ -30,6 +30,12 @@ def fetch_stock_history(symbol):
     hist = stock.history(period="6mo")
     return hist
 
+def plot_stock_history(symbol):
+    hist = fetch_stock_history(symbol)
+    if not hist.empty:
+        fig = px.line(hist, x=hist.index, y="Close", title=f"Koersverloop {symbol} (6 maanden)")
+        st.plotly_chart(fig)
+
 def main():
     """
     Webinterface voor de stock analyser.
@@ -45,17 +51,8 @@ def main():
         
         # Grafieken met koersverloop
         for symbol in symbol_list:
-            hist = fetch_stock_history(symbol)
-            if not hist.empty:
-                st.subheader(f"Koersverloop van {symbol} (6 maanden)")
-                plt.figure(figsize=(10, 4))
-                plt.plot(hist.index, hist['Close'], label=f"{symbol} Close Price")
-                plt.xlabel("Datum")
-                plt.ylabel("Prijs (USD)")
-                plt.legend()
-                plt.grid()
-                st.pyplot(plt)
-                
+            plot_stock_history(symbol)
+        
         # Download als CSV optie
         csv = df.to_csv(index=False).encode('utf-8')
         st.download_button("Download CSV", csv, "stock_data.csv", "text/csv")
