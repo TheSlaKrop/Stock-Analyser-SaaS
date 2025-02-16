@@ -1,5 +1,5 @@
 # Stock Analyser SaaS Pilot
-# Op basis van yfinance voor betrouwbare stock data met webinterface
+# Stock Screener & Factor Investing Tool (zonder AI-kosten)
 
 import yfinance as yf
 import pandas as pd
@@ -18,6 +18,9 @@ def fetch_stock_data(symbol):
         "P/E Ratio": stock.info.get("trailingPE", "N/A"),
         "EPS": stock.info.get("trailingEps", "N/A"),
         "Market Cap": stock.info.get("marketCap", "N/A"),
+        "ROIC": stock.info.get("returnOnEquity", "N/A"),
+        "Gross Margin": stock.info.get("grossMargins", "N/A"),
+        "Revenue Growth": stock.info.get("revenueGrowth", "N/A"),
         "52W High": stock.info.get("fiftyTwoWeekHigh", "N/A"),
         "52W Low": stock.info.get("fiftyTwoWeekLow", "N/A")
     }
@@ -38,15 +41,15 @@ def plot_stock_history(symbol):
 
 def main():
     """
-    Webinterface voor de stock analyser.
+    Webinterface voor de Stock Screener
     """
-    st.title("Stock Analyser SaaS Pilot")
+    st.title("Stock Screener & Factor Investing Tool")
     symbols = st.text_input("Voer stock symbolen in (kommagescheiden, bijv. AAPL, MSFT, TSLA)", "AAPL, MSFT, TSLA")
     symbol_list = [s.strip().upper() for s in symbols.split(",")]
     
     if st.button("Analyseer Stocks"):
-        stock_data = [fetch_stock_data(symbol) for symbol in symbol_list]
-        df = pd.DataFrame(stock_data)
+        stock_data_list = [fetch_stock_data(symbol) for symbol in symbol_list]
+        df = pd.DataFrame(stock_data_list)
         st.dataframe(df)
         
         # Grafieken met koersverloop
